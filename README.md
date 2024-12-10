@@ -3,7 +3,7 @@ Members:
 Jude Melvin Grutas,
 Kylan Heinrich Dimaiwat,
 Asher B. Caubang
-
+BSCS-2B
 
 ## Project Overview
 This project integrates three key data structures: **Binary Trees, Binary Search Trees (BST), and Heaps (Min-Heap and Max-Heap)**, with interactive functionalities that are educational and entertaining. It includes:
