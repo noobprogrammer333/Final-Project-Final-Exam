@@ -1,4 +1,9 @@
 # Final-Project-Final-Exam
+Members:
+-Jude Melvin Grutas
+-Kylan Heinrich Dimaiwat
+-Asher B. Caubang
+
 
 Project Overview
 This project integrates three key data structures: **Binary Trees, Binary Search Trees (BST), and Heaps (Min-Heap and Max-Heap)**, with interactive functionalities that are educational and entertaining. It includes:
@@ -8,8 +13,6 @@ This project integrates three key data structures: **Binary Trees, Binary Search
 3. **Heaps**: A game-based system utilizing Max-Heap and Min-Heap structures to teach heap operations, such as inserting values, displaying the heap, and solving challenges.
 
 The main menu integrates these three systems, providing users with an engaging way to interact with the data structures.
-
----
 
  How to Run the Code
 1. Setup:
