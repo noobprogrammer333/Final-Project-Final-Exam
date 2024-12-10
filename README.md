@@ -7,13 +7,13 @@ This project integrates three key data structures: **Binary Trees, Binary Search
 2. **Binary Search Tree (BST)**: A system to insert, search, delete, and perform traversals on a BST, complete with a game to test searching skills.
 3. **Heaps**: A game-based system utilizing Max-Heap and Min-Heap structures to teach heap operations, such as inserting values, displaying the heap, and solving challenges.
 
-The main menu integrates these three systems, providing users an engaging way to interact with the data structures.
+The main menu integrates these three systems, providing users with an engaging way to interact with the data structures.
 
 ---
 
  How to Run the Code
 1. Setup:
-   - Ensure you have a C++ compiler (e.g., GCC or any IDE like Code::Blocks or Visual Studio) installed.
+   - Ensure you have installed a C++ compiler (e.g., GCC or any IDE like Code::Blocks or Visual Studio).
    - Copy the code into a `.cpp` file.
 
 2. Compile and Run
@@ -35,7 +35,7 @@ Features:
   - Dynamically prunes the tree to reduce the number of possible words based on guesses.
 How It Works:
   - Players guess a 5-letter word.
-  - Feedback is provided based on the match with the target word.
+  - Feedback is provided based on whether it matches the target word.
   - The tree updates to show only possible remaining words.
 
 2. **Binary Search Tree (BST)**
@@ -64,14 +64,14 @@ How It Works:
 Example Walkthrough
 
 1. **Binary Tree**:
-   - Build a tree with words like "apple", "grape", "peach".
-   - Target word: *peach*.
+   - Build a tree with words like "apple", "grape", and "peach".
+   - Target word: peach
    - User guesses "apple" → Feedback: `YBBBY`.
    - Tree updates to reflect possible matches.
 
 2. **BST**:
    - Insert values: 10, 5, 20.
-   - Perform In-order traversal: `5 10 20`.
+   - Perform In-order traversal: 5 10 20.
    - Delete value: 10 → New root is 20.
    - Search for 5: Found.
 
@@ -81,6 +81,6 @@ Example Walkthrough
    - Display Min-Heap: 5, 10, 15, 20, 30
    - Challenge:
        - Guess the largest number in Max-Heap → Correct: 30
-       - Guess the smallest number in Min-Heap → Cprrect: 5
+       - Guess the smallest number in Min-Heap → Correct: 5
 
 This project is a fun, interactive way to explore key data structures, making it perfect for both learning and practical demonstration!
