@@ -1,11 +1,11 @@
 # Final-Project-Final-Exam
 Members: 
-Jude Melvin Grutas
-Kylan Heinrich Dimaiwat
+Jude Melvin Grutas,
+Kylan Heinrich Dimaiwat,
 Asher B. Caubang
 
 
-Project Overview
+## Project Overview
 This project integrates three key data structures: **Binary Trees, Binary Search Trees (BST), and Heaps (Min-Heap and Max-Heap)**, with interactive functionalities that are educational and entertaining. It includes:
 
 1. **Binary Tree**: A Wordle-like game where players guess a target word and the binary tree dynamically updates based on the guesses and feedback.
@@ -14,7 +14,7 @@ This project integrates three key data structures: **Binary Trees, Binary Search
 
 The main menu integrates these three systems, providing users with an engaging way to interact with the data structures.
 
- How to Run the Code
+## How to Run the Code
 1. Setup:
    - Ensure you have installed a C++ compiler (e.g., GCC or any IDE like Code::Blocks or Visual Studio).
    - Copy the code into a `.cpp` file.
