@@ -1,8 +1,8 @@
 # Final-Project-Final-Exam
-Members:
--Jude Melvin Grutas
--Kylan Heinrich Dimaiwat
--Asher B. Caubang
+Members: 
+Jude Melvin Grutas
+Kylan Heinrich Dimaiwat
+Asher B. Caubang
 
 
 Project Overview
