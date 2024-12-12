@@ -1,3 +1,8 @@
+BSCS-2B Group 3
+	Members: Jude Melvin Grutas
+		 Kylan Heinrich Dimaiwat
+		 Asher B. Caubang
+
 #include <iostream>
 #include <vector>
 #include <queue>
