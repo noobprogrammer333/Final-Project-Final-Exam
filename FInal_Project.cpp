@@ -8,171 +8,194 @@ BSCS-2B Group 3
 #include <queue>
 using namespace std;
 
+// Structure to represent a Node in the binary tree
 struct Node {
-        string Word;
-        Node* Left;
-        Node* Right;
+    string Word;  // Word stored in the node
+    Node* Left;   // Pointer to the left child
+    Node* Right;  // Pointer to the right child
 
-        Node(string word) : Word(word), Left(NULL), Right(NULL) {}
-    };
-    
-struct BstNode {
-    int data;
-    BstNode* left;
-    BstNode* right;
+    // Constructor to initialize a node with a word
+    Node(string word) : Word(word), Left(NULL), Right(NULL) {}
 };
 
-// Binary Tree Class
-class BinaryTree {
-    Node* root;
+// Structure to represent a Node in a Binary Search Tree (not used here)
+struct BstNode {
+    int data;       // Data stored in the node
+    BstNode* left;  // Pointer to the left child
+    BstNode* right; // Pointer to the right child
+};
 
+// BinaryTree Class
+class BinaryTree {
+    Node* root;  // Root of the binary tree
+
+    // Helper function to build the tree from a vector of words
     Node* BuildTreeHelper(const vector<string>& words, int& index) {
         if (index >= words.size()) {
-            return NULL;
+            return NULL;  // Return NULL if index exceeds the vector size
         }
 
+        // Create a new node with the current word
         Node* newNode = new Node(words[index]);
-        index++;
+        index++;  // Move to the next word
+
+        // Recursively build the left and right subtrees
         newNode->Left = BuildTreeHelper(words, index);
         newNode->Right = BuildTreeHelper(words, index);
 
-        return newNode;
+        return newNode;  // Return the newly created node
     }
 
+    // Helper function to prune the tree based on feedback from the game
     Node* PruneTreeHelper(Node* node, const string& guess, const string& feedback) {
-        if (!node) return NULL;
+        if (!node) return NULL;  // Return NULL if the node is NULL
 
         string currentFeedback = "";
         CheckGuess(node->Word, guess, currentFeedback);
 
+        // If feedback doesn't match, prune this branch
         if (currentFeedback != feedback) {
             return NULL;
         }
 
+        // Recursively prune the left and right subtrees
         node->Left = PruneTreeHelper(node->Left, guess, feedback);
         node->Right = PruneTreeHelper(node->Right, guess, feedback);
 
-        return node;
+        return node;  // Return the node after pruning
     }
 
+    // Helper function for level-order traversal of the tree
     void LevelOrderTraversalHelper(Node* node) const {
-        if (!node) return;
+        if (!node) return;  // If the tree is empty, return
 
-        queue<Node*> q;
+        queue<Node*> q;  // Queue to hold nodes during traversal
         q.push(node);
 
         while (!q.empty()) {
             Node* current = q.front();
             q.pop();
-            cout << current->Word << " ";
+            cout << current->Word << " ";  // Print the current node's word
 
-            if (current->Left) q.push(current->Left);
-            if (current->Right) q.push(current->Right);
+            if (current->Left) q.push(current->Left);   // Add left child to queue
+            if (current->Right) q.push(current->Right); // Add right child to queue
         }
-        cout << endl;
+        cout << endl;  // Print a newline after traversal
     }
 
 public:
+    // Constructor to initialize the BinaryTree with a NULL root
     BinaryTree() : root(NULL) {}
 
+    // Public function to build the tree using a vector of words
     void BuildTree(const vector<string>& words) {
         int index = 0;
         root = BuildTreeHelper(words, index);
     }
 
+    // Public function to perform level-order traversal
     void LevelOrderTraversal() const {
         LevelOrderTraversalHelper(root);
     }
 
+    // Public function to prune the tree based on a guess and feedback
     void PruneTree(const string& guess, const string& feedback) {
         root = PruneTreeHelper(root, guess, feedback);
     }
 
+    // Function to check the guess and generate feedback
     bool CheckGuess(const string& guess, const string& target, string& feedback) const {
-        feedback = "";
+        feedback = "";  // Initialize feedback as an empty string
         for (int i = 0; i < 5; ++i) {
             if (guess[i] == target[i]) {
-                feedback += "G";
+                feedback += "G";  // 'G' for correct letter in correct position
             } else if (target.find(guess[i]) != string::npos) {
-                feedback += "Y";
+                feedback += "Y";  // 'Y' for correct letter in wrong position
             } else {
-                feedback += "B";
+                feedback += "B";  // 'B' for incorrect letter
             }
         }
-        return feedback == "GGGGG";
+        return feedback == "GGGGG";  // Return true if the guess is correct
     }
-    
+
+    // Function to play the Wordle-like game
     void PlayGame(BinaryTree& tree, const string& TargetWord, int Chances) {
-    string Guess, Feedback;
+        string Guess, Feedback;
 
-    cout << "\n--- Welcome to the Wordle-like game! ---" << endl;
-    cout << "You have " << Chances << " chances to guess the 5-letter word." << endl;
-    cout << "\nInstructions for feedback after each guess:" << endl;
-    cout << "G = Correct letter in the correct position" << endl;
-    cout << "Y = Correct letter but in the wrong position" << endl;
-    cout << "B = Incorrect letter" << endl;
+        // Display game instructions
+        cout << "\n--- Welcome to the Wordle-like game! ---" << endl;
+        cout << "You have " << Chances << " chances to guess the 5-letter word." << endl;
+        cout << "\nInstructions for feedback after each guess:" << endl;
+        cout << "G = Correct letter in the correct position" << endl;
+        cout << "Y = Correct letter but in the wrong position" << endl;
+        cout << "B = Incorrect letter" << endl;
 
-    while (Chances > 0) {
-        cout << "\nEnter your guess (5-letter word): ";
-        cin >> Guess;
+        // Loop for the number of chances
+        while (Chances > 0) {
+            cout << "\nEnter your guess (5-letter word): ";
+            cin >> Guess;
 
-        if (Guess.length() != 5) {
-            cout << "Please enter a valid 5-letter word!" << endl;
-            continue;
-        }
+            if (Guess.length() != 5) {
+                cout << "Please enter a valid 5-letter word!" << endl;
+                continue;  // Ask for another guess if input is invalid
+            }
 
-        bool isCorrect = tree.CheckGuess(Guess, TargetWord, Feedback);
-        cout << "Feedback: " << Feedback << endl;
+            // Check the guess and provide feedback
+            bool isCorrect = tree.CheckGuess(Guess, TargetWord, Feedback);
+            cout << "Feedback: " << Feedback << endl;
 
-        tree.PruneTree(Guess, Feedback);
+            tree.PruneTree(Guess, Feedback);  // Prune the tree based on feedback
 
-        if (isCorrect) {
-            cout << "Congratulations! You've guessed the word!" << endl;
-            break;
-        }
+            if (isCorrect) {
+                cout << "Congratulations! You've guessed the word!" << endl;
+                break;
+            }
 
-        Chances--;
-        if (Chances == 0) {
-            cout << "You've run out of chances! The correct word was: " << TargetWord << endl;
-        } else {
-            cout << "Possible words left: ";
-            tree.LevelOrderTraversal();
+            Chances--;  // Decrease the number of chances
+            if (Chances == 0) {
+                cout << "You've run out of chances! The correct word was: " << TargetWord << endl;
+            } else {
+                cout << "Possible words left: ";
+                tree.LevelOrderTraversal();  // Show possible words
+            }
         }
     }
-}
-    
-    void run(){ 
-        vector<string> WordList = {"apple", "grape", "peach", "plumb", "mango", "berry", "lemon", "melon", "cherry", "fruit"}; 
-		BinaryTree tree; 
-        tree.BuildTree(WordList); 
-        
-        string TargetWord = "peach"; 
-        int Chances = 6; 
-        int choice; 
+
+    // Main function to run the game
+    void run() {
+        vector<string> WordList = {"apple", "grape", "peach", "plumb", "mango", "berry", "lemon", "melon", "cherry", "fruit"};
+        BinaryTree tree;
+        tree.BuildTree(WordList);
+
+        string TargetWord = "peach";  // The target word to guess
+        int Chances = 6;  // Number of chances allowed
+        int choice;
         char answer;
-        
-        cout << "\nChoose an option:\n1. Play Wordle-like Game\n2. Exit\n"; 
-        cout << "Enter your choice: "; 
-        cin >> choice; 
-        
-        switch (choice) { 
-            case 1: 
-            do{
-                PlayGame(tree, TargetWord, Chances); 
-                cout << "Would you like to play again?(Y/N): ";
-                cin >> answer;
-            }while (answer == 'Y' || answer == 'y');
-                break; 
-            case 2: 
+
+        // Display menu options
+        cout << "\nChoose an option:\n1. Play Wordle-like Game\n2. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        // Handle menu choices
+        switch (choice) {
+            case 1:
+                do {
+                    PlayGame(tree, TargetWord, Chances);
+                    cout << "Would you like to play again?(Y/N): ";
+                    cin >> answer;
+                } while (answer == 'Y' || answer == 'y');
+                break;
+            case 2:
                 cout << "Exiting the game. Goodbye!" << endl;
-                break; 
-            default: 
+                break;
+            default:
                 cout << "Invalid choice! Exiting..." << endl;
-                break; 
-        } 
+                break;
+        }
     }
-    
 };
+
 
 // Binary Search Tree Class
 class BST {
