@@ -44,14 +44,21 @@ How It Works:
 2. **Binary Search Tree (BST)**
 Purpose: Offers a comprehensive exploration of BST operations.
 Features:
-  - Insert values into the BST.
-  - Search for specific values.
-  - Delete nodes (leaf, single child, or two children).
-  - Traverse the BST using Pre-order, In-order, and Post-order techniques.
+  - Insert values into the BST: Following BST rules, add nodes to the tree. Earn 5 points per insertion.
+  - Search for specific values: Search for a value. Earn 10 points for a successful find.
+  - Delete nodes (leaf, single child, or two children): Earn 15 points for successful deletion.
+  - Traverse the BST using Pre-order, In-order, and Post-order techniques: View the tree in In-order, Pre-order, or Post-order.
   - Play a game to guess values in the BST.
 How It Works:
-  - Users interact with the BST through a menu-driven system.
-  - Detailed messages guide users through each operation.
+  - Players can:
+      Insert nodes into the tree.
+      Search for specific values.
+      Delete nodes.
+      View different tree traversals.
+      Earn points for each operation:
+      5 points for insertion.
+      10 points for a successful search.
+      15 points for node deletion.
 
 3. Heap Mountain
 Purpose: Introduces Max-Heap and Min-Heap operations in an interactive format.
@@ -86,4 +93,4 @@ Example Walkthrough
        - Guess the largest number in Max-Heap → Correct: 30
        - Guess the smallest number in Min-Heap → Correct: 5
 
-This project is a fun, interactive way to explore key data structures, making it perfect for both learning and practical demonstration!
+This project is a fun, interactive way to explore key data structures, making it perfect for learning and practical demonstration!
