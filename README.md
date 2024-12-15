@@ -65,11 +65,18 @@ Purpose: Introduces Max-Heap and Min-Heap operations in an interactive format.
 Features:
   - Insert values into both Max-Heap and Min-Heap simultaneously.
   - Display heaps as sorted arrays.
-  - Engage in challenges to guess the largest (Max-Heap) and smallest (Min-Heap) numbers.
+  - Engage in challenges to guess the Max-Heap and Min-Heap order.
 How It Works:
-  - Users add numbers to the heaps.
-  - Heaps are displayed in sorted order upon request.
-  - Challenges reward players for correct guesses, making learning engaging.
+  - Add Numbers:
+      Players add integers to both heaps.
+      Numbers are also stored in their original order.
+      Earn 5 points per number added.
+   -Challenge:
+      Players guess:
+      The largest number (max-heap root).
+      The smallest number (min-heap root).
+      Earn 10 points for each correct guess.
+      Displays original numbers and correct heap values if requested.
 
 Example Walkthrough
 
@@ -80,17 +87,24 @@ Example Walkthrough
    - Tree updates to reflect possible matches.
 
 2. **BST**:
-   - Insert values: 10, 5, 20.
+   - Insert values: 10, 5, 20. (Earns Points)
    - Perform In-order traversal: 5 10 20.
    - Delete value: 10 → New root is 20.
    - Search for 5: Found.
 
 3. **Heap**:
    - Insert values: 10, 20, 30, 5, 15
-   - Display Max-Heap: 30, 20, 15, 10, 5
-   - Display Min-Heap: 5, 10, 15, 20, 30
    - Challenge:
-       - Guess the largest number in Max-Heap → Correct: 30
-       - Guess the smallest number in Min-Heap → Correct: 5
+    - Displays the user input order of the values
+      --- Original Order of Numbers Added to Heap Mountain ---
+10 5 8
+
+--- Challenge: Guess the Peak and the Valley! ---
+Guess the Max-Heap in the Heap Mountain: 10
+Correct! The Max-Heap is indeed 10.
+Guess the Min-Heap in the Heap Mountain: 5
+Correct! The Min-Heap is indeed 5.
+Your total score after the challenge: 25
+
 
 This project is a fun, interactive way to explore key data structures, making it perfect for learning and practical demonstration!
