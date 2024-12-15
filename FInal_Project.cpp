@@ -6,196 +6,179 @@ BSCS-2B Group 3
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <cmath>
+#include <algorithm>
 using namespace std;
 
-// Structure to represent a Node in the binary tree
 struct Node {
-    string Word;  // Word stored in the node
-    Node* Left;   // Pointer to the left child
-    Node* Right;  // Pointer to the right child
+        string Word;
+        Node* Left;
+        Node* Right;
 
-    // Constructor to initialize a node with a word
-    Node(string word) : Word(word), Left(NULL), Right(NULL) {}
-};
-
-// Structure to represent a Node in a Binary Search Tree (not used here)
+        Node(string word) : Word(word), Left(NULL), Right(NULL) {}
+    };
+    
 struct BstNode {
-    int data;       // Data stored in the node
-    BstNode* left;  // Pointer to the left child
-    BstNode* right; // Pointer to the right child
+    int data;
+    BstNode* left;
+    BstNode* right;
 };
 
-// BinaryTree Class
+// Binary Tree Class
 class BinaryTree {
-    Node* root;  // Root of the binary tree
+    Node* root;
 
-    // Helper function to build the tree from a vector of words
     Node* BuildTreeHelper(const vector<string>& words, int& index) {
         if (index >= words.size()) {
-            return NULL;  // Return NULL if index exceeds the vector size
+            return NULL;
         }
 
-        // Create a new node with the current word
         Node* newNode = new Node(words[index]);
-        index++;  // Move to the next word
-
-        // Recursively build the left and right subtrees
+        index++;
         newNode->Left = BuildTreeHelper(words, index);
         newNode->Right = BuildTreeHelper(words, index);
 
-        return newNode;  // Return the newly created node
+        return newNode;
     }
 
-    // Helper function to prune the tree based on feedback from the game
     Node* PruneTreeHelper(Node* node, const string& guess, const string& feedback) {
-        if (!node) return NULL;  // Return NULL if the node is NULL
+        if (!node) return NULL;
 
         string currentFeedback = "";
         CheckGuess(node->Word, guess, currentFeedback);
 
-        // If feedback doesn't match, prune this branch
         if (currentFeedback != feedback) {
             return NULL;
         }
 
-        // Recursively prune the left and right subtrees
         node->Left = PruneTreeHelper(node->Left, guess, feedback);
         node->Right = PruneTreeHelper(node->Right, guess, feedback);
 
-        return node;  // Return the node after pruning
+        return node;
     }
 
-    // Helper function for level-order traversal of the tree
     void LevelOrderTraversalHelper(Node* node) const {
-        if (!node) return;  // If the tree is empty, return
+        if (!node) return;
 
-        queue<Node*> q;  // Queue to hold nodes during traversal
+        queue<Node*> q;
         q.push(node);
 
         while (!q.empty()) {
             Node* current = q.front();
             q.pop();
-            cout << current->Word << " ";  // Print the current node's word
+            cout << current->Word << " ";
 
-            if (current->Left) q.push(current->Left);   // Add left child to queue
-            if (current->Right) q.push(current->Right); // Add right child to queue
+            if (current->Left) q.push(current->Left);
+            if (current->Right) q.push(current->Right);
         }
-        cout << endl;  // Print a newline after traversal
+        cout << endl;
     }
 
 public:
-    // Constructor to initialize the BinaryTree with a NULL root
     BinaryTree() : root(NULL) {}
 
-    // Public function to build the tree using a vector of words
     void BuildTree(const vector<string>& words) {
         int index = 0;
         root = BuildTreeHelper(words, index);
     }
 
-    // Public function to perform level-order traversal
     void LevelOrderTraversal() const {
         LevelOrderTraversalHelper(root);
     }
 
-    // Public function to prune the tree based on a guess and feedback
     void PruneTree(const string& guess, const string& feedback) {
         root = PruneTreeHelper(root, guess, feedback);
     }
 
-    // Function to check the guess and generate feedback
     bool CheckGuess(const string& guess, const string& target, string& feedback) const {
-        feedback = "";  // Initialize feedback as an empty string
+        feedback = "";
         for (int i = 0; i < 5; ++i) {
             if (guess[i] == target[i]) {
-                feedback += "G";  // 'G' for correct letter in correct position
+                feedback += "G";
             } else if (target.find(guess[i]) != string::npos) {
-                feedback += "Y";  // 'Y' for correct letter in wrong position
+                feedback += "Y";
             } else {
-                feedback += "B";  // 'B' for incorrect letter
+                feedback += "B";
             }
         }
-        return feedback == "GGGGG";  // Return true if the guess is correct
+        return feedback == "GGGGG";
     }
-
-    // Function to play the Wordle-like game
+    
     void PlayGame(BinaryTree& tree, const string& TargetWord, int Chances) {
-        string Guess, Feedback;
+    string Guess, Feedback;
 
-        // Display game instructions
-        cout << "\n--- Welcome to the Wordle-like game! ---" << endl;
-        cout << "You have " << Chances << " chances to guess the 5-letter word." << endl;
-        cout << "\nInstructions for feedback after each guess:" << endl;
-        cout << "G = Correct letter in the correct position" << endl;
-        cout << "Y = Correct letter but in the wrong position" << endl;
-        cout << "B = Incorrect letter" << endl;
+    cout << "\n--- Welcome to the Wordle-like game! ---" << endl;
+    cout << "You have " << Chances << " chances to guess the 5-letter word." << endl;
+    cout << "\nInstructions for feedback after each guess:" << endl;
+    cout << "G = Correct letter in the correct position" << endl;
+    cout << "Y = Correct letter but in the wrong position" << endl;
+    cout << "B = Incorrect letter" << endl;
 
-        // Loop for the number of chances
-        while (Chances > 0) {
-            cout << "\nEnter your guess (5-letter word): ";
-            cin >> Guess;
+    while (Chances > 0) {
+        cout << "\nEnter your guess (5-letter word): ";
+        cin >> Guess;
 
-            if (Guess.length() != 5) {
-                cout << "Please enter a valid 5-letter word!" << endl;
-                continue;  // Ask for another guess if input is invalid
-            }
+        if (Guess.length() != 5) {
+            cout << "Please enter a valid 5-letter word!" << endl;
+            continue;
+        }
 
-            // Check the guess and provide feedback
-            bool isCorrect = tree.CheckGuess(Guess, TargetWord, Feedback);
-            cout << "Feedback: " << Feedback << endl;
+        bool isCorrect = tree.CheckGuess(Guess, TargetWord, Feedback);
+        cout << "Feedback: " << Feedback << endl;
 
-            tree.PruneTree(Guess, Feedback);  // Prune the tree based on feedback
+        tree.PruneTree(Guess, Feedback);
 
-            if (isCorrect) {
-                cout << "Congratulations! You've guessed the word!" << endl;
-                break;
-            }
+        if (isCorrect) {
+            cout << "Congratulations! You've guessed the word!" << endl;
+            break;
+        }
 
-            Chances--;  // Decrease the number of chances
-            if (Chances == 0) {
-                cout << "You've run out of chances! The correct word was: " << TargetWord << endl;
-            } else {
-                cout << "Possible words left: ";
-                tree.LevelOrderTraversal();  // Show possible words
-            }
+        Chances--;
+        if (Chances == 0) {
+            cout << "You've run out of chances! The correct word was: " << TargetWord << endl;
+        } else {
+            cout << "Possible words left: ";
+            tree.LevelOrderTraversal();
         }
     }
-
-    // Main function to run the game
-    void run() {
-        vector<string> WordList = {"apple", "grape", "peach", "plumb", "mango", "berry", "lemon", "melon", "cherry", "fruit"};
-        BinaryTree tree;
-        tree.BuildTree(WordList);
-
-        string TargetWord = "peach";  // The target word to guess
-        int Chances = 6;  // Number of chances allowed
-        int choice;
+}
+    
+    void btgame(){ 
+        vector<string> WordList = {"apple", "grape", "peach", "plumb", "mango", "berry", "lemon", "melon", "cherry", "fruit"}; 
+		BinaryTree tree; 
+        tree.BuildTree(WordList); 
+        
+        string TargetWord = "peach"; 
+        int Chances = 6; 
+        int choice; 
         char answer;
-
-        // Display menu options
-        cout << "\nChoose an option:\n1. Play Wordle-like Game\n2. Exit\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-
-        // Handle menu choices
-        switch (choice) {
-            case 1:
-                do {
-                    PlayGame(tree, TargetWord, Chances);
-                    cout << "Would you like to play again?(Y/N): ";
-                    cin >> answer;
-                } while (answer == 'Y' || answer == 'y');
-                break;
-            case 2:
+        
+        cout << "==============================\n";
+        cout << "| Choose an option:          |\n";
+		cout << "| 1. Play Wordle-like Game   |\n";
+		cout << "| 2. Exit                    |\n";  
+		cout << "==============================\n";
+        cout << "Enter your choice: ";  
+        cin >> choice; 
+        
+        switch (choice) { 
+            case 1: 
+            do{
+                PlayGame(tree, TargetWord, Chances); 
+                cout << "Would you like to play again?(Y/N): ";
+                cin >> answer;
+            }while (answer == 'Y' || answer == 'y');
+                break; 
+            case 2: 
                 cout << "Exiting the game. Goodbye!" << endl;
-                break;
-            default:
+                break; 
+            default: 
                 cout << "Invalid choice! Exiting..." << endl;
-                break;
-        }
+                break; 
+        } 
     }
+    
 };
-
 
 // Binary Search Tree Class
 class BST {
@@ -319,260 +302,288 @@ void PrintPostOrder(BstNode* root) {
     }
 
     // Main Menu
-    void run() {
-        BstNode* root = NULL; // Initialize the BST as an empty tree
-        int choice, value;
-        char answer;
+    void bstgame(){
+    BstNode *root = NULL; // Initialize the BST as an empty tree
+    int choice, value, score = 0; // Add a score tracker for the game
+    char answer;
 
-        while (true) {
-            cout << "============================================\n";
-        cout << "||--- Welcome to the Binary Search Tree ---||\n";
-        cout << "============================================\n";
-        cout << "| 1. Insert a node (Let's grow our tree!)  |\n";
-        cout << "| 2. Search for a value (Seek and you shall find!) |\n";
-        cout << "| 3. Delete a node (Time to say goodbye!)   |\n";
-        cout << "| 4. Print Tree Traversals                  |\n";
-        cout << "| 5. Play Search Game (Can you find the value?) |\n";
-        cout << "| 6. Exit the program (Come back soon!)     |\n";
-        cout << "============================================\n";
-            cout << "Enter your choice: ";
-            cin >> choice;
+    cout << "========================================================\n";
+	cout << "||            Welcome to the BST Game!                 ||\n";
+    cout << "===================================================== ==\n";
+    cout << "|Instructions:                                         |\n";
+    cout << "|1. Insert values to grow the tree.                    |\n";
+    cout << "|2. Search for values to earn points.                  |\n";
+    cout << "|3. Delete nodes strategically to maintain balance.    |\n";
+    cout << "|4. Earn points for correct operations!                |\n";
+    cout << "--------------------------------------------------------\n";
 
-            switch (choice) {
-                case 1:
-                do{
-                    cout << "Enter value to insert: ";
-                    cin >> value;
-                    root = Insert(root, value);
-                    cout << "Value " << value << " inserted into the tree. It's growing strong!" << endl;
-                    cout << "Would you like to insert another node?(Y/N): ";
-                    cin >> answer;
-                }while (answer == 'Y' || answer == 'y');
-                    break;
-                case 2:
-                    cout << "Enter value to search: ";
-                    cin >> value;
-                    if (Search(root, value))
-                        cout << "Value found!" << endl;
-                    else
-                        cout << "Value not found." << endl;
-                    break;
-                case 3:
-                    cout << "Enter value to delete: ";
-                    cin >> value;
-                    root = Delete(root, value);
-                    cout << "Value " << value << " deleted from the tree. Nature's way!" << endl;
-                    break;
-                case 4:
-                    cout << "In-order Traversal: ";
-                    PrintInOrder(root);
-                    cout << endl;
+    while (true){
+        cout << "| 1. Insert a node (Earn 5 points per node)            |\n";
+        cout << "| 2. Search for a value (Earn 10 points if found)      |\n";
+        cout << "| 3. Delete a node (Earn 15 points if deleted)         |\n";
+        cout << "| 4. View Traversals (In-order, Pre-order, Post-order) |\n";
+        cout << "| 5. View Current Score                                |\n";
+        cout << "| 6. Exit the Game                                     |\n";
+        cout << "========================================================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
 
-                    cout << "Pre-order Traversal: ";
-                    PrintPreOrder(root);
-                    cout << endl;
+        switch (choice)
+        {
+        case 1: // Insert node
+            do
+            {
+                cout << "Enter value to insert: ";
+                cin >> value;
+                root = Insert(root, value);
+                score += 5; // Increment score
+                cout << "Value " << value << " inserted! (+5 points)\n";
+                cout << "Would you like to insert another node? (Y/N): ";
+                cin >> answer;
+            } while (answer == 'Y' || answer == 'y');
+            break;
 
-                    cout << "Post-order Traversal: ";
-                    PrintPostOrder(root);
-                    cout << endl;
-                    break;
-                case 5:
-                    searchGame(root);
-                    break;
-                case 6:
-                    cout << "Exiting program. Thank you for nurturing the BST garden!" << endl;
-                    return;
-                default:
-                    cout << "Invalid choice. Please try again." << endl;
+        case 2: // Search for a value
+            cout << "Enter value to search: ";
+            cin >> value;
+            if (Search(root, value))
+            {
+                score += 10; // Increment score
+                cout << "Value found! (+10 points)\n";
             }
+            else
+            {
+                cout << "Value not found. Better luck next time!\n";
+            }
+            break;
+
+        case 3: // Delete a node
+            cout << "Enter value to delete: ";
+            cin >> value;
+            if (Search(root, value)) // Ensure value exists before deleting
+            {
+                root = Delete(root, value);
+                score += 15; // Increment score
+                cout << "Value deleted! (+15 points)\n";
+            }
+            else
+            {
+                cout << "Value not found, cannot delete.\n";
+            }
+            break;
+
+        case 4: // Print Tree Traversals
+            cout << "In-order Traversal: ";
+            PrintInOrder(root);
+            cout << endl;
+
+            cout << "Pre-order Traversal: ";
+            PrintPreOrder(root);
+            cout << endl;
+
+            cout << "Post-order Traversal: ";
+            PrintPostOrder(root);
+            cout << endl;
+            break;
+
+        case 5: // View Score
+            cout << "Current Score: " << score << " points\n";
+            break;
+
+        case 6: // Exit Game
+            cout << "Exiting the BST Game. Final Score: " << score << " points\n";
+            return;
+
+        default:
+            cout << "Invalid choice. Please try again.\n";
         }
     }
+}
 };
-
 
 class HeapMountain {
 private:
-    vector<int> maxHeap;
-    vector<int> minHeap;
+    vector<int> maxHeap; // Max-heap for storing largest elements at the top
+    vector<int> minHeap; // Min-heap for storing smallest elements at the top
     int score; // Player's score
 
-    // Helper to heapify a max-heap
-    void heapifyForMax(vector<int>& heap, int index) {
+    // Generic heapify function to maintain heap property
+    void heapify(vector<int>& heap, int index, bool isMaxHeap) {
         int size = heap.size();
         while (true) {
-            int left = 2 * index + 1;
-            int right = 2 * index + 2;
-            int largest = index;
+            int left = 2 * index + 1;  // Left child index
+            int right = 2 * index + 2; // Right child index
+            int target = index; // Index to potentially swap with
 
-            if (left < size && heap[left] > heap[largest]) {
-                largest = left;
+            // Compare left child with current target based on heap type (max or min)
+            if (left < size && ((isMaxHeap && heap[left] > heap[target]) || (!isMaxHeap && heap[left] < heap[target]))) {
+                target = left;
             }
-            if (right < size && heap[right] > heap[largest]) {
-                largest = right;
+            // Compare right child with current target based on heap type (max or min)
+            if (right < size && ((isMaxHeap && heap[right] > heap[target]) || (!isMaxHeap && heap[right] < heap[target]))) {
+                target = right;
             }
-            if (largest == index) break;
+            // If no swap is needed, break the loop
+            if (target == index) break;
 
-            swap(heap[index], heap[largest]);
-            index = largest;
+            // Swap values to maintain heap property
+            swap(heap[index], heap[target]);
+            index = target; // Move to the target index for the next comparison
         }
     }
 
-    // Helper to heapify a min-heap
-    void heapifyForMin(vector<int>& heap, int index) {
-        int size = heap.size();
-        while (true) {
-            int left = 2 * index + 1;
-            int right = 2 * index + 2;
-            int smallest = index;
+    // Insert value into the appropriate heap (max or min)
+    void insertHeapValue(vector<int>& heap, int value, bool isMaxHeap) {
+        heap.push_back(value); // Add new value to the heap
+        int index = heap.size() - 1; // Index of the newly added element
 
-            if (left < size && heap[left] < heap[smallest]) {
-                smallest = left;
-            }
-            if (right < size && heap[right] < heap[smallest]) {
-                smallest = right;
-            }
-            if (smallest == index) break;
-
-            swap(heap[index], heap[smallest]);
-            index = smallest;
-        }
-    }
-
-    // Insert into max-heap
-    void insertMaxHeap(vector<int>& heap, int value) {
-        heap.push_back(value);
-        int index = heap.size() - 1;
-
+        // Bubble up the new value to maintain heap property
         while (index > 0) {
-            int parent = (index - 1) / 2;
-            if (heap[parent] >= heap[index]) break;
+            int parent = (index - 1) / 2; // Index of the parent
+            // Compare with parent and swap if necessary based on heap type
+            if ((isMaxHeap && heap[parent] >= heap[index]) || (!isMaxHeap && heap[parent] <= heap[index])) break;
+
+            // Swap with parent to maintain heap property
             swap(heap[index], heap[parent]);
-            index = parent;
+            index = parent; // Move to the parent's index for the next comparison
         }
     }
 
-    // Insert into min-heap
-    void insertMinHeap(vector<int>& heap, int value) {
-        heap.push_back(value);
-        int index = heap.size() - 1;
-
-        while (index > 0) {
-            int parent = (index - 1) / 2;
-            if (heap[parent] <= heap[index]) break;
-            swap(heap[index], heap[parent]);
-            index = parent;
+    // Validate if the input is a valid integer
+    bool getValidInteger(int& value) {
+        cin >> value; // Read input
+        if (cin.fail()) { // Check if input is not a valid integer
+            cin.clear(); // Clear the error state
+            cin.ignore(10000, '\n'); // Ignore the rest of the input
+            cout << "Invalid input. Please enter a valid integer.\n";
+            return false;
         }
+        return true;
     }
 
-    // Display the heap as a sorted array
-    void displayHeap(vector<int> heap, bool isMaxHeap) {
-        vector<int> sorted;
-        while (!heap.empty()) {
-            sorted.push_back(heap[0]);
-            swap(heap[0], heap[heap.size() - 1]);
-            heap.pop_back();
-            if (isMaxHeap) {
-                heapifyForMax(heap, 0);
-            } else {
-                heapifyForMin(heap, 0);
-            }
+    // Display the heap as a sorted array (from highest to lowest or vice versa)
+    void displayHeapSorted(const vector<int>& heap, bool isMaxHeap) {
+        vector<int> tempHeap = heap, sorted;
+        while (!tempHeap.empty()) {
+            sorted.push_back(tempHeap[0]); // Add root to sorted
+            swap(tempHeap[0], tempHeap.back()); // Swap root with last element
+            tempHeap.pop_back(); // Remove last element
+            heapify(tempHeap, 0, isMaxHeap); // Re-heapify the heap
         }
-        if (isMaxHeap) {
-            cout << "Max-Heap (Highest to Lowest): ";
-        } else {
-            cout << "Min-Heap (Lowest to Highest): ";
-        }
-        for (int val : sorted) {
-            cout << val << " ";
+
+        cout << (isMaxHeap ? "Max-Heap (Highest to Lowest): " : "Min-Heap (Lowest to Highest): ");
+        for (int value : sorted) {
+            cout << value << " "; // Print sorted values
         }
         cout << endl;
     }
 
+    // Display the heap in tree view (level by level)
+    void displayHeapTree(const vector<int>& heap, bool isMaxHeap) {
+        if (heap.empty()) {
+            cout << (isMaxHeap ? "Max-Heap" : "Min-Heap") << " is empty.\n";
+            return;
+        }
+
+        cout << (isMaxHeap ? "Max-Heap (Tree View):\n" : "Min-Heap (Tree View):\n");
+        int level = 0, itemsInLevel = 1;
+        for (size_t i = 0; i < heap.size(); ++i) {
+            if (i == itemsInLevel - 1) { // Print level and its elements
+                cout << "\nLevel " << level++ << ": ";
+                itemsInLevel += 1 << level; // Double the number of items for the next level
+            }
+            cout << heap[i] << " "; // Print heap element
+        }
+        cout << "\n\n";
+    }
+
 public:
-    // Constructor
+    // Constructor initializes the score to zero
     HeapMountain() : score(0) {}
 
-    // Insert value into both heaps
+    // Insert value into both heaps (max-heap and min-heap)
     void insertHeap(int value) {
-        insertMaxHeap(maxHeap, value);
-        insertMinHeap(minHeap, value);
-        cout << " " << value << " has been added to the Heap Mountain!" << endl;
+        insertHeapValue(maxHeap, value, true); // Insert into max-heap
+        insertHeapValue(minHeap, value, false); // Insert into min-heap
+        cout << " " << value << " has been added to the Heap Mountain!\n";
         score += 5; // Reward for inserting
         cout << "Your current score: " << score << endl;
     }
 
-    // Display the heaps
+    // Display both heaps
     void displayHeaps() {
         if (maxHeap.empty() && minHeap.empty()) {
             cout << "The Heap Mountain is empty! Start adding numbers to grow it.\n";
             return;
         }
         cout << "\n--- Heap Mountain View ---\n";
-        displayHeap(maxHeap, true); // Display max-heap
-        displayHeap(minHeap, false); // Display min-heap
+        displayHeapTree(maxHeap, true); // Display max-heap as tree
+        displayHeapTree(minHeap, false); // Display min-heap as tree
     }
 
-    // Display menu
+    // Display the game menu
     void displayMenu() {
-        cout << "============================================\n";
-    cout << "||--- Welcome to Heap Mountain ---||\n";
-    cout << "============================================\n";
-    cout << "| 1. Add a number to the Heap            |\n";
-    cout << "| 2. View Heap Mountain                 |\n";
-    cout << "| 3. Challenge: Find the Largest and Smallest Number |\n";
-    cout << "| 4. Exit Heap Mountain                 |\n";
-    cout << "============================================\n";
+        cout << "======================================================\n";
+        cout << "||         ---Welcome to Heap Mountain ---          ||\n";
+        cout << "======================================================\n";
+        cout << "| 1. Add a number to the Heap                        |\n";
+        cout << "| 2. View Heap Mountain                              |\n";
+        cout << "| 3. Challenge: Find the Largest and Smallest Number |\n";
+        cout << "| 4. Exit Heap Mountain                              |\n";
+        cout << "======================================================\n";
     }
 
-    // Run the Heap Mountain gameplay
-    void run() {
+    // Run the game logic
+    void heapgame() {
         int choice, value;
         char answer;
 
         while (true) {
-            displayMenu();
-            cin >> choice;
+            displayMenu(); // Show the menu
+            cout << "Enter your choice: ";
+            if (!getValidInteger(choice)) continue; // Validate choice
 
             switch (choice) {
                 case 1:
-                    do{
-                    cout << "Enter an integer to add to the Heap Mountain: ";
-                    cin >> value;
-                    insertHeap(value);
-                    
-                    cout << "Would you like to add another value? (Y/N): ";
+                    do {
+                        cout << "Enter an integer to add to the Heap Mountain: ";
+                        if (!getValidInteger(value)) continue; // Validate value
+                        insertHeap(value); // Insert value into both heaps
+
+                        // Ask user if they want to add another value
+                        cout << "Would you like to add another value? (Y/N): ";
                         cin >> answer;
-                    } while (answer == 'Y' || answer == 'y');
+                    } while (answer == 'Y' || answer == 'y'); // Repeat if user wants to add more
                     break;
                 case 2:
-                    displayHeaps();
+                    displayHeaps(); // Show both heaps
                     break;
                 case 3:
                     if (!maxHeap.empty() && !minHeap.empty()) {
                         cout << "\n--- Challenge: Guess the Peak and the Valley! ---\n";
-                    int userGuessMax, userGuessMin;
+                        int userGuessMax, userGuessMin;
 
-                    // Ask the user to guess the largest number
-                    cout << "Guess the Highest Number in the Heap Mountain (Max-Heap): ";
-                    cin >> userGuessMax;
-                    if (userGuessMax == maxHeap[0]) {
-                        cout << " Correct! The Highest Number is indeed " << maxHeap[0] << ".\n";
+                        // Ask the user to guess the largest number in the max-heap
+                        cout << "Guess the Highest Number in the Heap Mountain (Max-Heap): ";
+                        if (!getValidInteger(userGuessMax)) continue;
+                        if (userGuessMax == maxHeap[0]) {
+                            cout << " Correct! The Highest Number is indeed " << maxHeap[0] << ".\n";
                             score += 10; // Bonus points for correct guess
-                    } else {
-                        cout << " Wrong! The Highest Number was " << maxHeap[0] << ".\n";
-                    }
+                        } else {
+                            cout << " Wrong! The Highest Number was " << maxHeap[0] << ".\n";
+                        }
 
-                    // Ask the user to guess the smallest number
-                    cout << "Guess the Lowest Number in the Heap Mountain (Min-Heap): ";
-                    cin >> userGuessMin;
-                    if (userGuessMin == minHeap[0]) {
-                        cout << " Correct! The Lowest Number is indeed " << minHeap[0] << ".\n";
-                        score += 10; // Bonus points for correct guess
-                    } else {
-                        cout << " Wrong! The Lowest Number was " << minHeap[0] << ".\n";
-                    }
+                        // Ask the user to guess the smallest number in the min-heap
+                        cout << "Guess the Lowest Number in the Heap Mountain (Min-Heap): ";
+                        if (!getValidInteger(userGuessMin)) continue;
+                        if (userGuessMin == minHeap[0]) {
+                            cout << " Correct! The Lowest Number is indeed " << minHeap[0] << ".\n";
+                            score += 10; // Bonus points for correct guess
+                        } else {
+                            cout << " Wrong! The Lowest Number was " << minHeap[0] << ".\n";
+                        }
 
-                    // Display total score after the challenge
+                        // Display total score after the challenge
                         cout << "Your total score after the challenge: " << score << endl;
                     } else {
                         cout << "The Heap Mountain is empty! Add numbers to start the challenge.\n";
@@ -580,14 +591,13 @@ public:
                     break;
                 case 4:
                     cout << "Exiting Heap Mountain. Your final score: " << score << endl;
-                    return;
+                    return; // Exit the game
                 default:
-                    cout << "Invalid choice. Try again!\n";
+                    cout << "Invalid choice. Try again!\n"; // Invalid input handling
             }
         }
     }
 };
-
 // Main Menu System
 void menu(){
   BinaryTree binaryTree;
@@ -610,15 +620,15 @@ void menu(){
     switch (choice) {
       case 1:
         cout << "\n** Binary Trees are branching out! **\n";
-        binaryTree.run();
+        binaryTree.btgame();
         break;
       case 2:
         cout << "\n** Diving into the depths of Binary Search Trees! **\n";
-        bst.run();
+        bst.bstgame();
         break;
       case 3:
         cout << "\n** Heap time! Let's heap some fun together! **\n";
-        heap.run();
+        heap.heapgame();
         break;
       case 4:
         cout << "\nExiting... We hope you had fun with Trees and Heaps! Come back soon!\n";
