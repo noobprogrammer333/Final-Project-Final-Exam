@@ -6,7 +6,6 @@ BSCS-2B Group 3
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <cmath>
 #include <algorithm>
 using namespace std;
 
@@ -309,15 +308,16 @@ void PrintPostOrder(BstNode* root) {
 
     cout << "========================================================\n";
 	cout << "||            Welcome to the BST Game!                 ||\n";
-    cout << "===================================================== ==\n";
+    cout << "========================================================\n";
     cout << "|Instructions:                                         |\n";
     cout << "|1. Insert values to grow the tree.                    |\n";
     cout << "|2. Search for values to earn points.                  |\n";
     cout << "|3. Delete nodes strategically to maintain balance.    |\n";
     cout << "|4. Earn points for correct operations!                |\n";
-    cout << "--------------------------------------------------------\n";
+    cout << "========================================================\n";
 
     while (true){
+    	cout << "========================================================\n";
         cout << "| 1. Insert a node (Earn 5 points per node)            |\n";
         cout << "| 2. Search for a value (Earn 10 points if found)      |\n";
         cout << "| 3. Delete a node (Earn 15 points if deleted)         |\n";
@@ -405,6 +405,7 @@ class HeapMountain {
 private:
     vector<int> maxHeap; // Max-heap for storing largest elements at the top
     vector<int> minHeap; // Min-heap for storing smallest elements at the top
+    vector<int> originalNumbers; // Stores original input numbers for challenge
     int score; // Player's score
 
     // Generic heapify function to maintain heap property
@@ -471,7 +472,7 @@ private:
             heapify(tempHeap, 0, isMaxHeap); // Re-heapify the heap
         }
 
-        cout << (isMaxHeap ? "Max-Heap (Highest to Lowest): " : "Min-Heap (Lowest to Highest): ");
+        cout << (isMaxHeap ? "Max-Heap: " : "Min-Heap: ");
         for (int value : sorted) {
             cout << value << " "; // Print sorted values
         }
@@ -505,32 +506,21 @@ public:
     void insertHeap(int value) {
         insertHeapValue(maxHeap, value, true); // Insert into max-heap
         insertHeapValue(minHeap, value, false); // Insert into min-heap
+        originalNumbers.push_back(value); // Store the original order of input numbers
         cout << " " << value << " has been added to the Heap Mountain!\n";
         score += 5; // Reward for inserting
         cout << "Your current score: " << score << endl;
     }
 
-    // Display both heaps
-    void displayHeaps() {
-        if (maxHeap.empty() && minHeap.empty()) {
-            cout << "The Heap Mountain is empty! Start adding numbers to grow it.\n";
-            return;
-        }
-        cout << "\n--- Heap Mountain View ---\n";
-        displayHeapTree(maxHeap, true); // Display max-heap as tree
-        displayHeapTree(minHeap, false); // Display min-heap as tree
-    }
-
     // Display the game menu
     void displayMenu() {
-        cout << "======================================================\n";
-        cout << "||         ---Welcome to Heap Mountain ---          ||\n";
-        cout << "======================================================\n";
-        cout << "| 1. Add a number to the Heap                        |\n";
-        cout << "| 2. View Heap Mountain                              |\n";
-        cout << "| 3. Challenge: Find the Largest and Smallest Number |\n";
-        cout << "| 4. Exit Heap Mountain                              |\n";
-        cout << "======================================================\n";
+        cout << "=====================================================\n";
+        cout << "||         ---Welcome to Heap Mountain ---         ||\n";
+        cout << "=====================================================\n";
+        cout << "| 1. Add a number to the Heap                       |\n";
+        cout << "| 2. Challenge                                      |\n";
+        cout << "| 3. Exit Heap Mountain                             |\n";
+        cout << "=====================================================\n";
     }
 
     // Run the game logic
@@ -556,40 +546,61 @@ public:
                     } while (answer == 'Y' || answer == 'y'); // Repeat if user wants to add more
                     break;
                 case 2:
-                    displayHeaps(); // Show both heaps
-                    break;
+    if (!maxHeap.empty() && !minHeap.empty()) {
+        // Display the original order of numbers
+        cout << "\n--- Original Order of Numbers Added to Heap Mountain ---\n";
+        for (int num : originalNumbers) {
+            cout << num << " ";
+        }
+        cout << "\n\n";
+
+        cout << "--- Challenge: Guess the Peak and the Valley! ---\n";
+        int userGuessMax, userGuessMin;
+
+        // Ask the user to guess the largest number in the max-heap
+        cout << "Guess the Max-Heap in the Heap Mountain: ";
+        if (!getValidInteger(userGuessMax)) continue;
+        bool maxCorrect = userGuessMax == maxHeap[0];
+
+        // Ask the user to guess the smallest number in the min-heap
+        cout << "Guess the Min-Heap in the Heap Mountain: ";
+        if (!getValidInteger(userGuessMin)) continue;
+        bool minCorrect = userGuessMin == minHeap[0];
+
+        // Check correctness and update score
+        if (maxCorrect) {
+            cout << " Correct! The Max-Heap is indeed " << maxHeap[0] << ".\n";
+            score += 10; // Bonus points for correct guess
+        } else {
+            cout << " Wrong! The Max-Heap was " << maxHeap[0] << ".\n";
+        }
+
+        if (minCorrect) {
+            cout << " Correct! The Min-Heap is indeed " << minHeap[0] << ".\n";
+            score += 10; // Bonus points for correct guess
+        } else {
+            cout << " Wrong! The Min-Heap was " << minHeap[0] << ".\n";
+        }
+
+        cout << "Your total score after the challenge: " << score << endl;
+
+        // If challenge failed, ask if they want to view the correct heaps
+        if (!maxCorrect || !minCorrect) {
+            cout << "Would you like to view the correct order of the heaps? (Y/N): ";
+            cin >> answer;
+            if (answer == 'Y' || answer == 'y') {
+                cout << "\nMax-Heap (correct order): ";
+                for (int num : maxHeap) cout << num << " ";
+                cout << "\nMin-Heap (correct order): ";
+                for (int num : minHeap) cout << num << " ";
+                cout << endl;
+            }
+        }
+    } else {
+        cout << "The Heap Mountain is empty! Add numbers to start the challenge.\n";
+    }
+    break;
                 case 3:
-                    if (!maxHeap.empty() && !minHeap.empty()) {
-                        cout << "\n--- Challenge: Guess the Peak and the Valley! ---\n";
-                        int userGuessMax, userGuessMin;
-
-                        // Ask the user to guess the largest number in the max-heap
-                        cout << "Guess the Highest Number in the Heap Mountain (Max-Heap): ";
-                        if (!getValidInteger(userGuessMax)) continue;
-                        if (userGuessMax == maxHeap[0]) {
-                            cout << " Correct! The Highest Number is indeed " << maxHeap[0] << ".\n";
-                            score += 10; // Bonus points for correct guess
-                        } else {
-                            cout << " Wrong! The Highest Number was " << maxHeap[0] << ".\n";
-                        }
-
-                        // Ask the user to guess the smallest number in the min-heap
-                        cout << "Guess the Lowest Number in the Heap Mountain (Min-Heap): ";
-                        if (!getValidInteger(userGuessMin)) continue;
-                        if (userGuessMin == minHeap[0]) {
-                            cout << " Correct! The Lowest Number is indeed " << minHeap[0] << ".\n";
-                            score += 10; // Bonus points for correct guess
-                        } else {
-                            cout << " Wrong! The Lowest Number was " << minHeap[0] << ".\n";
-                        }
-
-                        // Display total score after the challenge
-                        cout << "Your total score after the challenge: " << score << endl;
-                    } else {
-                        cout << "The Heap Mountain is empty! Add numbers to start the challenge.\n";
-                    }
-                    break;
-                case 4:
                     cout << "Exiting Heap Mountain. Your final score: " << score << endl;
                     return; // Exit the game
                 default:
@@ -598,6 +609,7 @@ public:
         }
     }
 };
+
 // Main Menu System
 void menu(){
   BinaryTree binaryTree;
