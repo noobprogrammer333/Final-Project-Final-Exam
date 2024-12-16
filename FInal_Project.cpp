@@ -462,40 +462,21 @@ private:
         return true;
     }
 
-    // Display the heap as a sorted array (from highest to lowest or vice versa)
-    void displayHeapSorted(const vector<int>& heap, bool isMaxHeap) {
-        vector<int> tempHeap = heap, sorted;
-        while (!tempHeap.empty()) {
-            sorted.push_back(tempHeap[0]); // Add root to sorted
-            swap(tempHeap[0], tempHeap.back()); // Swap root with last element
-            tempHeap.pop_back(); // Remove last element
-            heapify(tempHeap, 0, isMaxHeap); // Re-heapify the heap
-        }
-
-        cout << (isMaxHeap ? "Max-Heap: " : "Min-Heap: ");
-        for (int value : sorted) {
-            cout << value << " "; // Print sorted values
-        }
-        cout << endl;
-    }
-
-    // Display the heap in tree view (level by level)
-    void displayHeapTree(const vector<int>& heap, bool isMaxHeap) {
-        if (heap.empty()) {
-            cout << (isMaxHeap ? "Max-Heap" : "Min-Heap") << " is empty.\n";
-            return;
-        }
-
-        cout << (isMaxHeap ? "Max-Heap (Tree View):\n" : "Min-Heap (Tree View):\n");
-        int level = 0, itemsInLevel = 1;
-        for (size_t i = 0; i < heap.size(); ++i) {
-            if (i == itemsInLevel - 1) { // Print level and its elements
-                cout << "\nLevel " << level++ << ": ";
-                itemsInLevel += 1 << level; // Double the number of items for the next level
+    // Validate if the input is a valid order (input a sequence of numbers)
+    bool getValidOrder(vector<int>& order, int size) {
+        order.clear();
+        int value;
+        for (int i = 0; i < size; ++i) {
+            cin >> value;
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Invalid input. Please enter a valid integer sequence.\n";
+                return false;
             }
-            cout << heap[i] << " "; // Print heap element
+            order.push_back(value); // Store the value in the order vector
         }
-        cout << "\n\n";
+        return true;
     }
 
 public:
@@ -507,7 +488,7 @@ public:
         insertHeapValue(maxHeap, value, true); // Insert into max-heap
         insertHeapValue(minHeap, value, false); // Insert into min-heap
         originalNumbers.push_back(value); // Store the original order of input numbers
-        cout << " " << value << " has been added to the Heap Mountain!\n";
+        cout << value << " has been added to the Heap Mountain!\n";
         score += 5; // Reward for inserting
         cout << "Your current score: " << score << endl;
     }
@@ -546,60 +527,54 @@ public:
                     } while (answer == 'Y' || answer == 'y'); // Repeat if user wants to add more
                     break;
                 case 2:
-    if (!maxHeap.empty() && !minHeap.empty()) {
-        // Display the original order of numbers
-        cout << "\n--- Original Order of Numbers Added to Heap Mountain ---\n";
-        for (int num : originalNumbers) {
-            cout << num << " ";
-        }
-        cout << "\n\n";
+                    if (!maxHeap.empty() && !minHeap.empty()) {
+                        // Display the original order of numbers before the challenge
+                        cout << "\n--- Original Order of Numbers Added to Heap Mountain ---\n";
+                        for (int num : originalNumbers) {
+                            cout << num << " "; // Display each number in the original order
+                        }
+                        cout << "\n";
 
-        cout << "--- Challenge: Guess the Peak and the Valley! ---\n";
-        int userGuessMax, userGuessMin;
+                        // Ask the user to guess the correct order for Max-Heap
+                        cout << "\n--- Challenge: Guess the Correct Order for Heaps! ---\n";
+                        cout << "Guess the correct order of Max-Heap :\n";
+                        vector<int> userMaxOrder;
+                        if (!getValidOrder(userMaxOrder, maxHeap.size())) continue;
 
-        // Ask the user to guess the largest number in the max-heap
-        cout << "Guess the Max-Heap in the Heap Mountain: ";
-        if (!getValidInteger(userGuessMax)) continue;
-        bool maxCorrect = userGuessMax == maxHeap[0];
+                        // Check if the user's guess for max-heap is correct
+                        bool maxCorrect = (userMaxOrder == maxHeap);
 
-        // Ask the user to guess the smallest number in the min-heap
-        cout << "Guess the Min-Heap in the Heap Mountain: ";
-        if (!getValidInteger(userGuessMin)) continue;
-        bool minCorrect = userGuessMin == minHeap[0];
+                        cout << "Guess the correct order of Min-Heap :\n";
+                        vector<int> userMinOrder;
+                        if (!getValidOrder(userMinOrder, minHeap.size())) continue;
 
-        // Check correctness and update score
-        if (maxCorrect) {
-            cout << " Correct! The Max-Heap is indeed " << maxHeap[0] << ".\n";
-            score += 10; // Bonus points for correct guess
-        } else {
-            cout << " Wrong! The Max-Heap was " << maxHeap[0] << ".\n";
-        }
+                        // Check if the user's guess for min-heap is correct
+                        bool minCorrect = (userMinOrder == minHeap);
 
-        if (minCorrect) {
-            cout << " Correct! The Min-Heap is indeed " << minHeap[0] << ".\n";
-            score += 10; // Bonus points for correct guess
-        } else {
-            cout << " Wrong! The Min-Heap was " << minHeap[0] << ".\n";
-        }
+                        // Display results and update score
+                        if (maxCorrect) {
+                            cout << "Correct! The Max-Heap order is correct.\n";
+                            score += 10; // Bonus points for correct guess
+                        } else {
+                            cout << "Wrong! The Max-Heap order was: ";
+                            for (int num : maxHeap) cout << num << " "; // Show the correct max-heap order
+                            cout << endl;
+                        }
 
-        cout << "Your total score after the challenge: " << score << endl;
+                        if (minCorrect) {
+                            cout << "Correct! The Min-Heap order is correct.\n";
+                            score += 10; // Bonus points for correct guess
+                        } else {
+                            cout << "Wrong! The Min-Heap order was: ";
+                            for (int num : minHeap) cout << num << " "; // Show the correct min-heap order
+                            cout << endl;
+                        }
 
-        // If challenge failed, ask if they want to view the correct heaps
-        if (!maxCorrect || !minCorrect) {
-            cout << "Would you like to view the correct order of the heaps? (Y/N): ";
-            cin >> answer;
-            if (answer == 'Y' || answer == 'y') {
-                cout << "\nMax-Heap (correct order): ";
-                for (int num : maxHeap) cout << num << " ";
-                cout << "\nMin-Heap (correct order): ";
-                for (int num : minHeap) cout << num << " ";
-                cout << endl;
-            }
-        }
-    } else {
-        cout << "The Heap Mountain is empty! Add numbers to start the challenge.\n";
-    }
-    break;
+                        cout << "Your total score after the challenge: " << score << endl;
+                    } else {
+                        cout << "The Heap Mountain is empty! Add numbers to start the challenge.\n";
+                    }
+                    break;
                 case 3:
                     cout << "Exiting Heap Mountain. Your final score: " << score << endl;
                     return; // Exit the game
