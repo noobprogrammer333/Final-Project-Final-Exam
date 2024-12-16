@@ -67,22 +67,29 @@ The **main menu** integrates these systems, offering a unified interface to expl
 
 
 
-### 3. **Heap Mountain**
-- **Purpose**: Teach heap operations interactively using Max-Heap and Min-Heap structures.
-- **Features**:
-  - Insert numbers into both heaps simultaneously.
-  - Display heaps as sorted arrays or tree structures.
-  - Solve challenges to guess heap properties.
-- **How It Works**:
-  - **Add Numbers**:  
-    - Players add integers to the heaps.  
-    - Numbers are stored in their original order.  
-    - Earn **5 points** per number added.
-  - **Challenge**:
-    - Guess the largest (Max-Heap root) and smallest (Min-Heap root) values.  
-    - Earn **10 points** per correct guess.  
-    - View the original input order and heap structure upon request.
 
+### 3. Heap Mountain  
+**Purpose:** Teach heap operations interactively using Max-Heap and Min-Heap structures.  
+**Features:**  
+- Insert numbers into both heaps simultaneously.  
+- Display heaps as sorted arrays or tree structures.  
+- Solve challenges to guess heap properties.  
+
+**How It Works:**  
+- **Add Numbers:** Players add integers to both Max-Heap and Min-Heap. Each number is inserted into both heaps, ensuring that the Max-Heap maintains the largest element at the root and the Min-Heap maintains the smallest element at the root. The original order of numbers is stored to be displayed during the challenge phase.
+  - Players earn 5 points for each number added to the heaps.
+  
+- **Challenge:**  
+  - After adding a set of numbers, the player can start a challenge. In this challenge, the player guesses the correct order of both the Max-Heap and Min-Heap.
+  - The player is asked to guess the correct root values and the order of elements in the heaps:
+    - The largest value should be guessed at the top for the Max-Heap.
+    - The smallest value should be guessed at the top for the Min-Heap.
+  - Points are awarded based on correct guesses:  
+    - 10 points for each correct order for Max-Heap and Min-Heap.
+  
+- **Original Order Display:** Before the challenge, the player can view the original order of numbers added to the heaps, providing context for the challenge and helping players test their knowledge of heap properties.
+  
+- **Heap Structure Visualization:** Players can view the heap structure as arrays or in a more visual tree format, enabling a clearer understanding of heap operations.
 
 
 ## **Example Walkthrough**
@@ -100,16 +107,14 @@ The **main menu** integrates these systems, offering a unified interface to expl
    - Search: `5` → Found.
 
 3. **Heap Mountain**:
-   - Insert: `10`, `5`, `8`.
-   - Original input:  
-   
-     --- Original Order of Numbers Added to Heap Mountain ---
-     10 5 8
-     
-   - Challenge:  
-     - Max-Heap guess: `10` → Correct!  
-     - Min-Heap guess: `5` → Correct!  
-   - Score after challenge: `25`.
+   -- **Insert Numbers:** Players insert numbers like `10, 5, 8` into the heaps.
+  **Original input:**
+  - --- Original Order of Numbers Added to Heap Mountain ---  
+    `10 5 8`
+- **Challenge:**
+  - Guess the Max-Heap order: `10 5 8` (Correct!)
+  - Guess the Min-Heap order: `5 8 10` (Correct!)
+  **Score after challenge:** 25 points.
 
 
 
